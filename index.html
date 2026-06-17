@@ -231,12 +231,23 @@ function addKakaoMarker(place, type) {
   markers[type].push(marker);
 }
 
+function getRestaurantColor(rating) {
+  if (!rating)        return '#C8DCFF'; // 평점 없음 - 가장 옅게
+  if (rating < 2)     return '#C8DCFF'; // 1점대
+  if (rating < 3)     return '#96BAFF'; // 2점대
+  if (rating < 4)     return '#5B8CFF'; // 3점대
+  if (rating < 4.5)   return '#2D5FD4'; // 4점대
+  return '#0A3BAF';                      // 4.5~5점 - 가장 진하게
+}
+
 function addGoogleMarker(place) {
   if (!place.location) return;
   const pos = new kakao.maps.LatLng(place.location.latitude, place.location.longitude);
+  const color = getRestaurantColor(place.rating);
+  const ratingText = place.rating ? ` ⭐${place.rating}` : '';
   const content = document.createElement('div');
-  content.style.cssText = `background:${COLORS.restaurant};color:#fff;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;`;
-  content.innerText = `🍽️ ${place.displayName?.text || '식당'}`;
+  content.style.cssText = `background:${color};color:#fff;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;`;
+  content.innerText = `🍽️ ${place.displayName?.text || '식당'}${ratingText}`;
   content.addEventListener('click', () => showGooglePopup(place, pos));
   const marker = new kakao.maps.CustomOverlay({ position: pos, content, yAnchor: 1 });
   marker.setMap(map);
