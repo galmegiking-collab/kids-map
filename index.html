@@ -85,7 +85,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-ser
 
 <script>
 const GOOGLE_KEY = 'AIzaSyChybYWjTNWbbr1-CeniouFL0qgLUhGGcE';
-const KAKAO_APP_KEY = '9ddafafd50b0d86a88eda2b9609d4567';
+const KAKAO_APP_KEY = '9ddafafd50b0d86a88eda2b9609d4567'; // JS키 (지도용)
+const KAKAO_REST_KEY = '5d4dc2c32ddadce9c7c0529640042da6'; // REST키 (검색용)
 
 const COLORS = { playground: '#4CAF82', kidscafe: '#FF8C42', restaurant: '#5B8CFF' };
 const LABELS = { playground: '놀이터', kidscafe: '키즈카페', restaurant: '식당' };
@@ -178,7 +179,7 @@ function loadAllMarkers(lat, lng) {
     if (done >= 3) { isSearching = false; showLoading(false); }
   }
 
-  if (active.playground) searchKakao('어린이놀이터', lat, lng, 'playground', checkDone);
+  if (active.playground) searchKakao('놀이터', lat, lng, 'playground', checkDone);
   else checkDone();
   if (active.kidscafe) searchKakao('키즈카페', lat, lng, 'kidscafe', checkDone);
   else checkDone();
@@ -272,7 +273,7 @@ function renderPopup(html, pos) {
   document.getElementById('popup-content').innerHTML = html;
   const popup = document.getElementById('popup');
   popup.style.display = 'block';
-  const proj = map.getProjection();
+  
   const point = proj.pointFromCoords(pos);
   const rect = document.getElementById('map').getBoundingClientRect();
   popup.style.left = Math.min(point.x + 10, rect.width - 260) + 'px';
@@ -294,7 +295,7 @@ function toggleCategory(type) {
     showLoading(true);
     if (type === 'restaurant') searchGoogleRestaurant(c.getLat(), c.getLng(), () => showLoading(false));
     else {
-      const kw = type === 'playground' ? '어린이놀이터' : '키즈카페';
+      const kw = type === 'playground' ? '놀이터' : '키즈카페';
       searchKakao(kw, c.getLat(), c.getLng(), type, () => showLoading(false));
     }
   }
